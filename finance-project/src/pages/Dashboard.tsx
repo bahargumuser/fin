@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { useNavigate } from 'react-router-dom';
@@ -7,21 +8,28 @@ import '../App.css';
 const Dashboard = () => {
   const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
   const navigate = useNavigate();
+  const [totalDebt, setTotalDebt] = useState<number>(0);
+  const [paidDebt, setPaidDebt] = useState<number>(0);
+  const [upcomingPayments, setUpcomingPayments] = useState<{ date: string; amount: number }[]>([]);
 
-  // dummy data
-  const totalDebt = 32493.72;
-  const paidDebt = 12000;
-  const upcomingPayments = [
-    { date: '2024-07-15', amount: 2707.81 },
-    { date: '2024-08-15', amount: 2707.81 },
-    { date: '2024-09-15', amount: 2707.81 },
-  ];
-
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isAuthenticated) {
       navigate('/login');
+    } else {
+      fetchData();
     }
   }, [isAuthenticated, navigate]);
+
+  const fetchData = async () => {
+    try {
+      const debtResponse = await axios.get('/api/debt');
+      setTotalDebt(debtResponse.data.totalDebt);
+      setPaidDebt(debtResponse.data.paidDebt);
+      setUpcomingPayments(debtResponse.data.upcomingPayments);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
   return (
     <div className="container">
