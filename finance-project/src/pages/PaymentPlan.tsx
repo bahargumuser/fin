@@ -16,7 +16,6 @@ const PaymentPlan = () => {
   return (
     <div>
       <h1>Payment Plan</h1>
-      {/* Show payment plan and allow marking payments as paid */}
     </div>
   );
 };

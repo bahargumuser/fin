@@ -16,7 +16,6 @@ const Debts = () => {
   return (
     <div>
       <h1>Debts</h1>
-      {/* List debts and provide form to add new debt */}
     </div>
   );
 };
