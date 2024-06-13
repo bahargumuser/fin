@@ -1,18 +1,16 @@
 import axios from 'axios';
+import { logout } from '../slices/authSlice';
 
-const baseUrl = 'http://localhost:5000';
+const baseUrl = process.env.REACT_APP_BACKEND_URL;
 
-const axiosInstance = axios.create({
+const api = axios.create({
     baseURL: baseUrl,
-    timeout: 10000, 
-    headers: {
-        'Content-Type': 'application/json',
-    },
+    withCredentials: true,
 });
 
 const loginUser = async (username, password) => {
     try {
-        const response = await axiosInstance.post('/api/login', {
+        const response = await api.post('/api/login', { 
             username,
             password,
         });
@@ -28,7 +26,7 @@ const fetchDebts = async () => {
     const token = localStorage.getItem('accessToken');
 
     try {
-        const response = await axiosInstance.get('/api/debts', {
+        const response = await api.get('/api/debts', { // Use `api` instead of `axiosInstance`
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -40,5 +38,6 @@ const fetchDebts = async () => {
         throw error;
     }
 };
+
 
 export { loginUser, fetchDebts };
